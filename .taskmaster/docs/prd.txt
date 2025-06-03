@@ -1,0 +1,298 @@
+<context>
+# Overview  
+TrustPlay is a community-driven rating platform that digitalizes recreational football players' performance through peer-to-peer ratings. 
+Unlike fitness tracking apps that measure physical metrics, TrustPaly focuses on community-based assessment of player skills, behavior, and mental game. 
+The platform gamifies the football experience by allowing players to build their digital football reputation through ratings from teammates and opponents after each match session.
+
+
+# Core Features  
+
+## User Profiles & Digital Football Footprint
+- Comprehensive player profiles displaying aggregated overall ratings and play type distributions
+- Historical session data showing rating progression over time
+- Achievement badges and milestones to encourage engagement
+- Personal statistics and performance trends
+- Play type analytics showing how others perceive their playing style
+
+## QR Code-Based Rating System
+- Post-match QR code generation for easy rating access
+- Seamless onboarding for new users through QR scanning
+- Session-based rating collection with automatic aggregation
+- Real-time rating updates and notifications
+
+## Simplified Rating Framework
+- **Overall Rating**: Single comprehensive score (1-10) reflecting the player's overall performance and contribution to the match
+- **Play Type Classification**: Categorical assessment of the player's style and approach:
+  - **Fun**: Entertaining, creative, brings joy to the game
+  - **Competitive**: Driven, focused on winning, high intensity
+  - **Fair Play**: Respectful, follows rules, good sportsmanship
+  - **Technical**: Skilled, precise, tactically aware
+  - **Social**: Team-oriented, supportive, great communication
+  - **Reliable**: Consistent, dependable, steady performance
+
+## Session Management
+- Match session creation and management
+- Multi-user rating collection within sessions
+- Session closure and rating aggregation
+- MVP and category winner determination based on highest overall ratings and play type distributions
+
+## Gamification Elements
+- Progressive rating system with visual feedback
+- Achievement unlocking based on performance milestones and play type consistency
+- Leaderboards for overall ratings and play type categories
+- Social sharing of achievements and improvements
+
+# User Experience  
+
+## User Personas
+**Primary Persona - The Competitive Recreational Player**
+- Age: 25-40, plays football 2-3 times per week
+- Motivated by improvement and recognition
+- Values community feedback and fair competition
+- Tech-savvy and social media active
+
+**Secondary Persona - The Casual Social Player**
+- Age: 20-50, plays occasionally with friends/colleagues
+- Enjoys the social aspect more than competition
+- Interested in fair play and good sportsmanship
+- May be less tech-savvy but appreciates simple interfaces
+
+## Key User Flows
+
+### New User Onboarding Flow
+1. Scan QR code from existing user's session
+2. Redirected to rating page with session context
+3. Prompted to create account to submit rating
+4. Quick profile setup with Google Auth
+5. Submit overall rating and select play type for the session
+6. Option to generate own QR code for rating
+
+### Existing User Session Flow
+1. Complete football match
+2. Open app and create new session
+3. Generate QR code with session details
+4. Share QR code with other players
+5. Monitor incoming ratings in real-time
+6. Close session when all ratings collected
+7. View aggregated results including overall rating and play type breakdown
+
+### Rating Submission Flow
+1. Access session via QR code or direct link
+2. Authenticate (Google Auth)
+3. View player profile being rated
+4. Submit overall rating (1-10 scale) using slider or star system
+5. Select primary play type that best describes the player's style in this session
+6. Confirm submission
+7. Option to generate own QR for rating
+
+## UI/UX Considerations
+- Mobile-first design for on-field usage
+- High contrast, large touch targets for outdoor visibility
+- Intuitive iconography for quick recognition
+- Minimal steps to complete core actions
+- Offline capability for rating submission
+- Progressive web app for easy installation
+</context>
+
+<PRD>
+# Technical Architecture  
+
+## System Components
+- **Frontend**: Next.js with TypeScript, Tailwind CSS, and shadcn/ui components
+- **Backend**: Next.js API routes with serverless functions
+- **Database**: PostgreSQL with Prisma ORM for data modeling
+- **Authentication**: Supabase Auth for user management and session handling
+- **Real-time Updates**: Supabase real-time subscriptions for live rating updates
+- **QR Code Generation**: qrcode.js library for client-side QR generation
+- **File Storage**: Supabase Storage for profile images and assets
+
+## Data Models
+
+### User Model
+- id, email, username, display_name
+- profile_image_url, created_at, updated_at
+- current_overall_rating (average of all received ratings)
+- play_type_distribution (percentage breakdown of received play types)
+- total_sessions_played, total_ratings_given
+
+### Session Model
+- id, creator_id, session_name, location
+- created_at, closed_at, is_active
+- qr_code_data, session_code (short alphanumeric)
+
+### Rating Model
+- id, session_id, rater_id, rated_user_id
+- overall_score (1-10 scale)
+- play_type (enum: fun, competitive, fair_play, technical, social, reliable)
+- written_feedback (optional), created_at
+
+### SessionParticipant Model
+- id, session_id, user_id, joined_at
+- has_been_rated, has_given_ratings
+
+## APIs and Integrations
+- Supabase for authentication, database, and real-time features
+- QR code scanning via device camera API
+- Push notifications for rating requests and session updates
+- Social sharing APIs for achievement sharing
+
+## Infrastructure Requirements
+- Vercel deployment for Next.js application
+- Supabase cloud instance for backend services
+- CDN for static asset delivery
+- SSL certificates for secure QR code data transmission
+
+# Development Roadmap  
+
+## Phase 1: MVP Core Features
+**Authentication & User Management**
+- Supabase Auth integration with google auth
+- Basic user profile creation (automatically from google) and editing
+
+**Session Management Foundation**
+- Create new session functionality
+- Generate QR codes with session data
+- Basic session participant tracking
+
+**Rating System Core**
+- Overall rating interface with slider (1-10 scale)
+- Play type selection interface with clear categorization
+- Rating submission and storage
+- Basic rating aggregation and play type distribution calculation
+
+**QR Code Integration**
+- QR code generation with session/user data
+- QR code scanning and session joining
+- Redirect new users to signup flow
+
+## Phase 2: Enhanced User Experience
+**Improved Profile System**
+- Profile image upload functionality
+- Detailed rating history and trends
+- Visual rating progression charts
+- Play type distribution analytics and trends
+- Session history with detailed breakdowns
+
+**Advanced Session Features**
+- Session closure and final results
+- MVP determination algorithm based on highest overall ratings
+- Play type category highlights (most fun player, most competitive, etc.)
+
+**Basic Gamification**
+- Achievement badge system for rating milestones and play type consistency
+- Rating milestone celebrations
+- Simple leaderboards for overall ratings and play type categories
+
+## Phase 3: Social & Engagement Features
+**Community Features**
+- Friend system and connections
+- Session sharing and invitations
+- Group/team creation and management
+- Play type-based player recommendations
+
+**Advanced Gamification**
+- Comprehensive achievement system
+- Play type-specific challenges and seasonal goals
+- Advanced statistics and analytics
+
+**Enhanced Rating System**
+- Written feedback and comments
+- Rating verification and anti-gaming measures
+- Historical rating and play type comparison tools
+
+## Phase 4: Advanced Features & Scaling
+**Analytics & Insights**
+- Personal performance analytics
+- Community insights and trends
+- Coaching recommendations based on ratings
+
+**Advanced Social Features**
+- Tournament organization tools
+- Team vs team rating comparisons
+- Social media integration
+
+**Platform Optimization**
+- Advanced caching and performance optimization
+- Mobile app development (React Native)
+- Offline-first capabilities
+
+# Logical Dependency Chain
+
+## Foundation Layer (Must be built first)
+1. **Database Schema & Models**: User, Session, Rating, SessionParticipant tables with overall rating and play type fields
+2. **Authentication System**: Supabase Auth integration with signup/login flows
+3. **Basic User Profiles**: Profile creation, editing, and viewing with overall rating display
+
+## Core Functionality Layer
+4. **Session Creation**: Ability to create and manage football sessions
+5. **QR Code System**: Generation and scanning of session QR codes
+6. **Rating Interface**: Overall rating submission with play type selection
+7. **Rating Storage**: Backend API for storing and retrieving overall ratings and play types
+
+## User Experience Layer
+8. **Session Joining Flow**: Complete flow from QR scan to rating submission
+9. **Rating Aggregation**: Calculate and display user's overall rating and play type distribution
+10. **Session Results**: Display session outcomes, MVP determination, and play type highlights
+
+## Enhancement Layer
+11. **Profile Enhancement**: Rating history, trends, play type analytics, and detailed statistics
+12. **Gamification Elements**: Badges, achievements, and leaderboards for ratings and play types
+13. **Real-time Updates**: Live session updates and notifications
+
+## Advanced Features Layer
+14. **Social Features**: Friend connections, session sharing, and play type-based recommendations
+15. **Advanced Analytics**: Performance insights, play type trends, and recommendations
+16. **Community Tools**: Group management and tournament features
+
+# Risks and Mitigations  
+
+## Technical Challenges
+**Risk**: QR code scanning reliability across different devices and lighting conditions
+**Mitigation**: Implement fallback manual session code entry, test across multiple devices, provide clear scanning instructions
+
+**Risk**: Real-time rating updates causing performance issues
+**Mitigation**: Implement efficient caching strategies, use Supabase real-time selectively, implement rate limiting
+
+**Risk**: Rating manipulation and fake accounts
+**Mitigation**: Implement session-based rating validation, require mutual rating participation, add reporting mechanisms
+
+**Risk**: Play type bias or misrepresentation
+**Mitigation**: Provide clear play type definitions, implement multiple ratings for accurate distribution, add self-assessment comparison features
+
+## Product Challenges
+**Risk**: Low user adoption due to complexity of rating process
+**Mitigation**: Streamline onboarding flow with simplified single rating + play type selection, provide clear value proposition, implement progressive disclosure of features
+
+**Risk**: Insufficient critical mass for meaningful ratings
+**Mitigation**: Focus on local football communities first, implement referral incentives, partner with local football groups
+
+**Risk**: Negative community dynamics from harsh ratings
+**Mitigation**: Implement positive reinforcement systems, provide rating guidelines and play type descriptions, add moderation tools
+
+## MVP Definition
+The MVP should focus on the core rating loop: create session → generate QR → join session → submit overall rating and play type → view results. This provides immediate value while being simple enough to validate the concept quickly.
+
+# Appendix  
+
+## Technical Specifications
+- **Minimum Supported Devices**: iOS 12+, Android 8+, modern web browsers
+- **QR Code Format**: JSON payload with session_id, user_id, and verification hash
+- **Rating Scale**: 1-10 scale for overall rating with 0.5 increments
+- **Play Types**: Predefined set of 6 categories (fun, competitive, fair_play, technical, social, reliable)
+- **Session Timeout**: 24 hours automatic closure if not manually closed
+
+## Research Findings
+- Recreational football players value peer feedback over self-assessment
+- Mobile-first approach essential for on-field usage
+- Simplified rating system increases participation rates
+- Play type categorization helps players understand their perceived style
+- Gamification increases engagement but must not overshadow core functionality
+- Simple onboarding critical for viral growth through QR code sharing
+
+## Future Considerations
+- Integration with existing football apps and platforms
+- Expansion to other sports with similar community dynamics
+- Professional league integration for amateur player scouting
+- AI-powered coaching recommendations based on rating patterns and play type trends
+- Dynamic play type suggestions based on performance patterns
+</PRD>
