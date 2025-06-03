@@ -116,62 +116,39 @@ export async function deleteSession(id: string): Promise<boolean> {
 }
 
 export async function addParticipantToSession(sessionId: string, userId: string): Promise<SessionParticipant | null> {
-  const supabase = await createClient()
+   const supabase = await createClient()
+   
+  // Use RPC function that handles this atomically
+  const { data, error } = await supabase
+    .rpc('add_participant_to_session', {
+      p_session_id: sessionId,
+      p_user_id: userId
+    })
   
-  // First check if session has space
-  const session = await getSessionById(sessionId)
-  if (!session || session.current_participants >= session.max_participants) {
-    console.error('Session is full or does not exist')
+  if (error) {
+    console.error('Error adding participant:', error)
     return null
   }
   
-  // Add participant
-  const { data: participant, error: participantError } = await supabase
-    .from('session_participants')
-    .insert({ session_id: sessionId, user_id: userId })
-    .select()
-    .single()
-  
-  if (participantError) {
-    console.error('Error adding participant:', participantError)
-    return null
-  }
-  
-  // Update session participant count
-  await supabase
-    .from('sessions')
-    .update({ current_participants: session.current_participants + 1 })
-    .eq('id', sessionId)
-  
-  return participant
-}
+  return data
+ }
 
 export async function removeParticipantFromSession(sessionId: string, userId: string): Promise<boolean> {
-  const supabase = await createClient()
+   const supabase = await createClient()
+   
+  const { error } = await supabase
+    .rpc('remove_participant_from_session', {
+      p_session_id: sessionId,
+      p_user_id: userId
+    })
   
-  // Remove participant
-  const { error: participantError } = await supabase
-    .from('session_participants')
-    .delete()
-    .eq('session_id', sessionId)
-    .eq('user_id', userId)
-  
-  if (participantError) {
-    console.error('Error removing participant:', participantError)
+  if (error) {
+    console.error('Error removing participant:', error)
     return false
   }
   
-  // Update session participant count
-  const session = await getSessionById(sessionId)
-  if (session) {
-    await supabase
-      .from('sessions')
-      .update({ current_participants: Math.max(0, session.current_participants - 1) })
-      .eq('id', sessionId)
-  }
-  
   return true
-}
+ }
 
 export async function getSessionParticipants(sessionId: string): Promise<User[]> {
   const supabase = await createClient()

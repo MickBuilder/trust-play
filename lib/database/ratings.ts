@@ -246,7 +246,7 @@ export async function getPlayTypeStats(userId: string): Promise<Record<PlayType,
   data?.forEach(rating => {
     const playType = rating.play_type as PlayType
     stats[playType].count += 1
-    stats[playType].totalScore += rating.overall_score
+    stats[playType].totalScore += Number(rating.overall_score)
   })
   
   // Calculate averages
