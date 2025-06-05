@@ -1,5 +1,4 @@
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import { Button } from '@/components/ui/button'
 import { ArrowLeft, Trophy } from 'lucide-react'
 import Link from 'next/link'
 
@@ -16,11 +15,12 @@ export default function TermsPage() {
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center py-6">
             <div className="flex items-center space-x-4">
-              <Link href="/">
-                <Button variant="ghost" size="sm" className="text-gray-400 hover:text-white">
-                  <ArrowLeft className="w-4 h-4 mr-2" />
-                  Back to Home
-                </Button>
+              <Link 
+                href="/" 
+                className="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 hover:bg-accent hover:text-accent-foreground h-8 px-3 text-gray-400 hover:text-white"
+              >
+                <ArrowLeft className="w-4 h-4 mr-2" />
+                Back to Home
               </Link>
               <div className="h-6 w-px bg-gray-700"></div>
               <div className="flex items-center space-x-2">

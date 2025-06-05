@@ -19,8 +19,7 @@ DECLARE
   v_participant session_participants%ROWTYPE;
   v_current_count INTEGER;
 BEGIN
-  -- Get session info
-  SELECT * INTO v_session FROM sessions WHERE id = p_session_id;
+ SELECT * INTO v_session FROM sessions WHERE id = p_session_id FOR UPDATE;
   
   IF NOT FOUND THEN
     RAISE EXCEPTION 'Session not found';

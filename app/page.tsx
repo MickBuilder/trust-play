@@ -8,6 +8,7 @@ import {
   CTASection,
   Footer
 } from '@/components/landing'
+import { redirect } from 'next/navigation'
 
 export default async function HomePage() {
   const supabase = await createClient()
@@ -15,11 +16,7 @@ export default async function HomePage() {
 
   // If user is authenticated, redirect to dashboard
   if (user) {
-    return (
-      <script>
-        {`window.location.href = '/dashboard'`}
-      </script>
-    )
+    redirect('/dashboard')
   }
 
   return (

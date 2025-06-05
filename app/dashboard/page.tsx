@@ -112,7 +112,7 @@ export default async function DashboardPage() {
                   View My Profile
                 </Button>
               </Link>
-              <Link href=" /realtime-demo" className="block">
+              <Link href="/realtime-demo" className="block">
                 <Button className="w-full bg-gradient-to-r from-blue-500 via-purple-500 to-pink-600 hover:from-blue-600 hover:via-purple-600 hover:to-pink-700 text-white border-0 shadow-lg shadow-blue-500/25">
                   View Real-time Demo
                 </Button>

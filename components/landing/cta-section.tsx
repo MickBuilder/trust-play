@@ -62,22 +62,22 @@ export function CTASection() {
             variants={itemVariants}
             className="flex flex-col sm:flex-row gap-4 justify-center items-center"
           >
-            <Link href="/login">
-              <motion.div
-                whileHover={{ 
-                  scale: 1.05,
-                  y: -2,
-                  boxShadow: "0 20px 40px rgba(34, 197, 94, 0.4)"
-                }}
-                whileTap={{ scale: 0.95 }}
-                transition={{ type: "spring", stiffness: 400, damping: 10 }}
-              >
-                <Button size="lg" className="bg-gradient-to-r from-green-500 via-blue-500 to-purple-600 hover:from-green-600 hover:via-blue-600 hover:to-purple-700 text-white px-8 py-4 text-lg border border-gray-700/50 shadow-lg shadow-green-500/25">
-                  Start Playing Today
-                  <ArrowRight className="w-5 h-5 ml-2" />
-                </Button>
-              </motion.div>
-            </Link>
+<motion.div
+  whileHover={{ 
+    scale: 1.05,
+    y: -2,
+    boxShadow: "0 20px 40px rgba(34, 197, 94, 0.4)"
+  }}
+  whileTap={{ scale: 0.95 }}
+  transition={{ type: "spring", stiffness: 400, damping: 10 }}
+>
+  <Link href="/login">
+    <Button size="lg" className="bg-gradient-to-r from-green-500 via-blue-500 to-purple-600 hover:from-green-600 hover:via-blue-600 hover:to-purple-700 text-white px-8 py-4 text-lg border border-gray-700/50 shadow-lg shadow-green-500/25">
+      Start Playing Today
+      <ArrowRight className="w-5 h-5 ml-2" />
+    </Button>
+  </Link>
+</motion.div>
             
             <motion.div 
               className="flex items-center text-gray-300"

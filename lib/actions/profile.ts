@@ -73,8 +73,8 @@ export async function uploadProfileImage(formData: FormData) {
   }
 
   try {
-    const fileExt = file.name.split('.').pop()
-    const fileName = `${user.id}/profile.${fileExt}`
+const fileExt = file.name.includes('.') ? file.name.split('.').pop() : 'png'
+const fileName = `${user.id}/profile.${fileExt}`
     
     // Upload file to Supabase Storage
     const { error: uploadError } = await supabase.storage

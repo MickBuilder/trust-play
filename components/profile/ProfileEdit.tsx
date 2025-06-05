@@ -40,8 +40,9 @@ const profileEditSchema = z.object({
       if (!val) return true
       const date = new Date(val)
       const now = new Date()
-      const age = now.getFullYear() - date.getFullYear()
-      return age >= 13 && age <= 100
+const age =
+  (now.getTime() - date.getTime()) / (1000 * 60 * 60 * 24 * 365.25)
+return age >= 13 && age <= 100
     }, 'Age must be between 13 and 100 years'),
 })
 

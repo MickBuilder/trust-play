@@ -54,7 +54,9 @@ export function ProfileView({ user }: ProfileViewProps) {
                 <div className="flex items-center space-x-4">
                   <div className="text-center">
                     <div className="text-2xl font-bold text-green-400">
-                      {user.current_overall_rating.toFixed(1)}
+                      {user.current_overall_rating != null
+  ? user.current_overall_rating.toFixed(1)
+  : '--'}
                     </div>
                     <div className="text-xs text-gray-500">Overall Rating</div>
                   </div>
