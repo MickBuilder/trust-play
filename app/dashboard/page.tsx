@@ -3,7 +3,7 @@ import { redirect } from 'next/navigation'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
-import { Trophy, Users, Star, Zap } from 'lucide-react'
+import { Trophy, Users, Star, Zap, Calendar, Plus } from 'lucide-react'
 import Link from 'next/link'
 
 export default async function DashboardPage() {
@@ -36,6 +36,12 @@ export default async function DashboardPage() {
               </div>
             </div>
             <div className="flex items-center space-x-4">
+              <Link href="/sessions">
+                <Button variant="outline" className="border-gray-700/50 text-gray-300 hover:bg-gray-800/50">
+                  <Calendar className="w-4 h-4 mr-2" />
+                  Sessions
+                </Button>
+              </Link>
               <SignOutButton />
             </div>
           </div>
@@ -101,12 +107,18 @@ export default async function DashboardPage() {
               <CardTitle className="text-white">Quick Actions</CardTitle>
             </CardHeader>
             <CardContent className="space-y-3">
-              <Button className="w-full bg-gradient-to-r from-green-500 via-blue-500 to-purple-600 hover:from-green-600 hover:via-blue-600 hover:to-purple-700 text-white border-0 shadow-lg shadow-green-500/25">
-                Join a Session
-              </Button>
-              <Button className="w-full bg-gray-900/50 border-gray-700/50 text-white hover:bg-gray-800/50 backdrop-blur-sm transition-all duration-300">
-                Create New Session
-              </Button>
+              <Link href="/sessions" className="block">
+                <Button className="w-full bg-gradient-to-r from-green-500 via-blue-500 to-purple-600 hover:from-green-600 hover:via-blue-600 hover:to-purple-700 text-white border-0 shadow-lg shadow-green-500/25">
+                  <Calendar className="w-4 h-4 mr-2" />
+                  Browse Sessions
+                </Button>
+              </Link>
+              <Link href="/sessions/create" className="block">
+                <Button className="w-full bg-gray-900/50 border-gray-700/50 text-white hover:bg-gray-800/50 backdrop-blur-sm transition-all duration-300">
+                  <Plus className="w-4 h-4 mr-2" />
+                  Create New Session
+                </Button>
+              </Link>
               <Link href="/profile" className="block">
                 <Button className="w-full bg-gray-900/50 border-gray-700/50 text-white hover:bg-gray-800/50 backdrop-blur-sm transition-all duration-300">
                   View My Profile

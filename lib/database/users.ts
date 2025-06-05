@@ -4,9 +4,23 @@ import { User, UserInsert, UserUpdate, UserWithStats, PlayType } from '@/lib/typ
 export async function createUser(userData: UserInsert): Promise<User | null> {
   const supabase = await createClient()
   
+  // Get the authenticated user's ID from Supabase Auth
+  const { data: { user: authUser } } = await supabase.auth.getUser()
+  
+  if (!authUser) {
+    console.error('No authenticated user found')
+    return null
+  }
+  
+  // Ensure the user ID matches the authenticated user's ID
+  const userDataWithId = {
+    ...userData,
+    id: authUser.id // Set the ID to the authenticated user's ID
+  }
+  
   const { data, error } = await supabase
     .from('users')
-    .insert(userData)
+    .insert(userDataWithId)
     .select()
     .single()
   
