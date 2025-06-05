@@ -1,0 +1,7 @@
+export { Navigation } from './navigation'
+export { HeroSection } from './hero-section'
+export { FeaturesSection } from './features-section'
+export { HowItWorksSection } from './how-it-works'
+export { CTASection } from './cta-section'
+export { Footer } from './footer'
+export { FloatingCards } from './floating-cards' 

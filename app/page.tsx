@@ -1,26 +1,36 @@
 import { createClient } from '@/lib/supabase/server'
-import { redirect } from 'next/navigation'
+import {
+  Navigation,
+  HeroSection,
+  FeaturesSection,
+  FloatingCards,
+  HowItWorksSection,
+  CTASection,
+  Footer
+} from '@/components/landing'
 
 export default async function HomePage() {
-  try {
-    const supabase = await createClient()
-    const { data: { user }, error } = await supabase.auth.getUser()
-    
-    if (error) {
-      console.error('Auth error:', error)
-      redirect('/login')
-      return null
-    }
+  const supabase = await createClient()
+  const { data: { user } } = await supabase.auth.getUser()
 
-    if (user) {
-      redirect('/dashboard')
-    } else {
-      redirect('/login')
-    }
-  } catch (error) {
-    console.error('Unexpected error:', error)
-    redirect('/login')
+  // If user is authenticated, redirect to dashboard
+  if (user) {
+    return (
+      <script>
+        {`window.location.href = '/dashboard'`}
+      </script>
+    )
   }
 
-   return null
- }
+  return (
+    <div className="min-h-screen bg-black">
+      <Navigation />
+      <HeroSection />
+      <FeaturesSection />
+      <FloatingCards />
+      <HowItWorksSection />
+      <CTASection />
+      <Footer />
+    </div>
+  )
+}

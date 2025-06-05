@@ -37,13 +37,22 @@ export async function middleware(request: NextRequest) {
     data: { user },
   } = await supabase.auth.getUser()
 
-  if (
-    !user &&
-    !request.nextUrl.pathname.startsWith('/login') &&
-    !request.nextUrl.pathname.startsWith('/auth') &&
-    !request.nextUrl.pathname.startsWith('/') // Allow access to home page
-  ) {
-    // no user, potentially respond by redirecting the user to the login page
+  // Define private routes that REQUIRE authentication
+  const privateRoutes = [
+    '/dashboard',
+    '/profile',
+    '/onboarding',
+    '/sessions', 
+    '/ratings',
+    '/realtime-demo'
+  ]
+  
+  const isPrivateRoute = privateRoutes.some(route => 
+    request.nextUrl.pathname === route || request.nextUrl.pathname.startsWith(route + '/')
+  )
+
+  // Only redirect to login if user is not authenticated AND trying to access private routes
+  if (!user && isPrivateRoute) {
     const url = request.nextUrl.clone()
     url.pathname = '/login'
     return NextResponse.redirect(url)
