@@ -58,22 +58,22 @@ export function SessionsList({ sessions, loading = false, onRefresh }: SessionsL
     const sessionDate = new Date(session.date_time)
     
     if (session.status === 'cancelled') {
-      return <Badge variant="destructive" className="text-xs px-2 py-1">Cancelled</Badge>
+      return <Badge variant="destructive" className="text-sm px-2 py-1">Cancelled</Badge>
     }
     
     if (session.status === 'completed') {
-      return <Badge variant="secondary" className="text-xs bg-gray-600 px-2 py-1">Completed</Badge>
+      return <Badge variant="secondary" className="text-sm bg-gray-600 px-2 py-1">Completed</Badge>
     }
     
     if (isPast(sessionDate)) {
-      return <Badge variant="secondary" className="text-xs bg-orange-600 px-2 py-1">Ended</Badge>
+      return <Badge variant="secondary" className="text-sm bg-orange-600 px-2 py-1">Ended</Badge>
     }
     
     if (session.current_participants >= session.max_participants) {
-      return <Badge variant="secondary" className="text-xs bg-red-600 px-2 py-1">Full</Badge>
+      return <Badge variant="secondary" className="text-sm bg-red-600 px-2 py-1">Full</Badge>
     }
     
-    return <Badge variant="default" className="text-xs bg-green-600 px-2 py-1">Open</Badge>
+    return <Badge variant="default" className="text-sm bg-green-600 px-2 py-1">Open</Badge>
   }
 
   const getParticipantStatus = (session: SessionWithDetails) => {
@@ -117,16 +117,16 @@ export function SessionsList({ sessions, loading = false, onRefresh }: SessionsL
       {/* Header - Mobile Optimized */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <h1 className="text-2xl sm:text-3xl font-bold text-white mb-2">Football Sessions</h1>
-          <p className="text-gray-400 text-sm sm:text-base">
+          <h1 className="text-3xl sm:text-4xl font-bold text-white mb-2">Football Sessions</h1>
+          <p className="text-gray-400 text-base sm:text-lg">
             Discover and join football sessions in your area
           </p>
         </div>
         <Button 
           onClick={() => router.push('/sessions/create')}
-          className="bg-gradient-to-r from-green-500 to-blue-500 hover:from-green-600 hover:to-blue-600 text-white shadow-lg shadow-green-500/25 h-10 sm:h-auto text-sm sm:text-base"
+          className="bg-gradient-to-r from-green-500 to-blue-500 hover:from-green-600 hover:to-blue-600 text-white shadow-lg shadow-green-500/25 h-12 sm:h-auto text-base sm:text-lg px-6"
         >
-          <Plus className="w-4 h-4 mr-2" />
+          <Plus className="w-5 h-5 mr-2" />
           Create Session
         </Button>
       </div>
@@ -218,13 +218,13 @@ export function SessionsList({ sessions, loading = false, onRefresh }: SessionsL
                 <Card key={session.id} className="glass-card group hover:shadow-green-500/10 transition-all duration-300 cursor-pointer" onClick={() => router.push(`/sessions/${session.id}`)}>
                   <CardHeader className="pb-3 px-4 sm:px-6 pt-4 sm:pt-6">
                     <div className="flex items-start justify-between gap-2">
-                      <CardTitle className="text-white text-base sm:text-lg group-hover:text-green-400 transition-colors leading-tight">
+                      <CardTitle className="text-white text-lg sm:text-xl group-hover:text-green-400 transition-colors leading-tight">
                         {session.title}
                       </CardTitle>
                       {getSessionStatusBadge(session)}
                     </div>
-                    <div className="flex items-center gap-2 text-xs sm:text-sm text-gray-400">
-                      <User className="w-3 h-3 sm:w-4 sm:h-4" />
+                    <div className="flex items-center gap-2 text-sm sm:text-base text-gray-400">
+                      <User className="w-4 h-4 sm:w-5 sm:h-5" />
                       <span className="truncate">{session.organizer?.display_name || 'Unknown'}</span>
                     </div>
                   </CardHeader>
@@ -232,53 +232,53 @@ export function SessionsList({ sessions, loading = false, onRefresh }: SessionsL
                   <CardContent className="space-y-3 sm:space-y-4 px-4 sm:px-6 pb-4 sm:pb-6">
                     {/* Session Info - Mobile Layout */}
                     <div className="space-y-2 sm:space-y-3">
-                      <div className="flex items-center gap-2 text-xs sm:text-sm">
-                        <Calendar className="w-3 h-3 sm:w-4 sm:h-4 text-green-400 flex-shrink-0" />
+                      <div className="flex items-center gap-2 text-sm sm:text-base">
+                        <Calendar className="w-4 h-4 sm:w-5 sm:h-5 text-green-400 flex-shrink-0" />
                         <span className="text-gray-300">
                           {format(sessionDate, 'MMM d, h:mm a')}
                         </span>
                       </div>
                       
-                      <div className="flex items-center gap-2 text-xs sm:text-sm">
-                        <MapPin className="w-3 h-3 sm:w-4 sm:h-4 text-red-400 flex-shrink-0" />
+                      <div className="flex items-center gap-2 text-sm sm:text-base">
+                        <MapPin className="w-4 h-4 sm:w-5 sm:h-5 text-red-400 flex-shrink-0" />
                         <span className="text-gray-300 truncate">{session.location}</span>
                       </div>
                       
-                      <div className="flex items-center gap-2 text-xs sm:text-sm">
-                        <Users className={cn("w-3 h-3 sm:w-4 sm:h-4 flex-shrink-0", participantStatus.color)} />
+                      <div className="flex items-center gap-2 text-sm sm:text-base">
+                        <Users className={cn("w-4 h-4 sm:w-5 sm:h-5 flex-shrink-0", participantStatus.color)} />
                         <span className="text-gray-300">
                           {participantStatus.count}/{participantStatus.max} players
                         </span>
                       </div>
                       
-                      <div className="flex items-center gap-2 text-xs sm:text-sm">
-                        <Clock className="w-3 h-3 sm:w-4 sm:h-4 text-blue-400 flex-shrink-0" />
+                      <div className="flex items-center gap-2 text-sm sm:text-base">
+                        <Clock className="w-4 h-4 sm:w-5 sm:h-5 text-blue-400 flex-shrink-0" />
                         <span className="text-gray-300">{session.duration} minutes</span>
                       </div>
                     </div>
 
                     {/* Description Preview */}
                     {session.description && (
-                      <p className="text-xs sm:text-sm text-gray-400 line-clamp-2">
+                      <p className="text-sm sm:text-base text-gray-400 line-clamp-2">
                         {session.description}
                       </p>
                     )}
 
                     {/* Join Button */}
                     <div className="flex items-center justify-between pt-2">
-                      <span className="text-xs text-gray-500">
+                      <span className="text-sm text-gray-500">
                         {formatDistanceToNow(sessionDate, { addSuffix: true })}
                       </span>
                       <Button 
                         size="sm" 
-                        className="bg-gradient-to-r from-green-500 to-blue-500 hover:from-green-600 hover:to-blue-600 text-white shadow-lg shadow-green-500/25 text-xs sm:text-sm px-3 py-1.5 sm:px-4 sm:py-2"
+                        className="bg-gradient-to-r from-green-500 to-blue-500 hover:from-green-600 hover:to-blue-600 text-white shadow-lg shadow-green-500/25 text-sm sm:text-base px-4 py-2 sm:px-6 sm:py-3"
                         onClick={(e) => {
                           e.stopPropagation()
                           router.push(`/sessions/${session.id}`)
                         }}
                       >
                         View Details
-                        <ArrowRight className="w-3 h-3 ml-1" />
+                        <ArrowRight className="w-4 h-4 ml-1" />
                       </Button>
                     </div>
                   </CardContent>
