@@ -207,8 +207,8 @@ export function SessionDetails({ session }: SessionDetailsProps) {
 
   return (
     <div className="space-y-4 sm:space-y-6">
-      {/* Header - Mobile Optimized */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 sm:gap-0">
+      {/* Header - Mobile Optimized - Hidden on Mobile */}
+      <div className="hidden sm:flex sm:items-center justify-between gap-3">
         <Button 
           variant="ghost" 
           onClick={() => router.back()}
@@ -219,42 +219,77 @@ export function SessionDetails({ session }: SessionDetailsProps) {
           <span className="text-sm sm:text-base">Back to Sessions</span>
         </Button>
         
-        {/* Action Buttons - Mobile Stack */}
-        <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 w-full sm:w-auto">
-          <div className="flex gap-2">
+        {/* Action Buttons - Desktop Only */}
+        <div className="flex items-center gap-2">
+          <Button 
+            variant="outline" 
+            size="sm" 
+            onClick={handleShare}
+            className="border-gray-700/50 text-gray-300 hover:bg-gray-800/50 h-8 text-sm"
+          >
+            <Share2 className="w-4 h-4 mr-2" />
+            Share
+          </Button>
+          {session.qr_code_data && (
             <Button 
               variant="outline" 
-              size="sm" 
-              onClick={handleShare}
-              className="flex-1 sm:flex-none border-gray-700/50 text-gray-300 hover:bg-gray-800/50 h-10 sm:h-8 text-sm"
+              size="sm"
+              onClick={() => setShowQRCode(!showQRCode)}
+              className="border-gray-700/50 text-gray-300 hover:bg-gray-800/50 h-8 text-sm"
             >
-              <Share2 className="w-4 h-4 mr-2" />
-              Share
+              <QrCode className="w-4 h-4 mr-2" />
+              QR Code
             </Button>
-            {session.qr_code_data && (
-              <Button 
-                variant="outline" 
-                size="sm"
-                onClick={() => setShowQRCode(!showQRCode)}
-                className="flex-1 sm:flex-none border-gray-700/50 text-gray-300 hover:bg-gray-800/50 h-10 sm:h-8 text-sm"
-              >
-                <QrCode className="w-4 h-4 mr-2" />
-                QR Code
-              </Button>
-            )}
-          </div>
+          )}
           {isOrganizer && (
             <Button 
               variant="outline" 
               size="sm"
               onClick={() => setShowParticipantManagement(!showParticipantManagement)}
-              className="border-gray-700/50 text-gray-300 hover:bg-gray-800/50 h-10 sm:h-8 text-sm"
+              className="border-gray-700/50 text-gray-300 hover:bg-gray-800/50 h-8 text-sm"
             >
               <Settings className="w-4 h-4 mr-2" />
               Settings
             </Button>
           )}
         </div>
+      </div>
+
+      {/* Mobile Action Buttons - Visible only on Mobile */}
+      <div className="sm:hidden flex flex-col gap-2">
+        <div className="flex gap-2">
+          <Button 
+            variant="outline" 
+            size="sm" 
+            onClick={handleShare}
+            className="flex-1 border-gray-700/50 text-gray-300 hover:bg-gray-800/50 h-10 text-sm"
+          >
+            <Share2 className="w-4 h-4 mr-2" />
+            Share
+          </Button>
+          {session.qr_code_data && (
+            <Button 
+              variant="outline" 
+              size="sm"
+              onClick={() => setShowQRCode(!showQRCode)}
+              className="flex-1 border-gray-700/50 text-gray-300 hover:bg-gray-800/50 h-10 text-sm"
+            >
+              <QrCode className="w-4 h-4 mr-2" />
+              QR Code
+            </Button>
+          )}
+        </div>
+        {isOrganizer && (
+          <Button 
+            variant="outline" 
+            size="sm"
+            onClick={() => setShowParticipantManagement(!showParticipantManagement)}
+            className="border-gray-700/50 text-gray-300 hover:bg-gray-800/50 h-10 text-sm"
+          >
+            <Settings className="w-4 h-4 mr-2" />
+            Manage Session
+          </Button>
+        )}
       </div>
 
       {/* Session Title and Status - Mobile Optimized */}

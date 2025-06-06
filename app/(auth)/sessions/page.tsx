@@ -74,7 +74,7 @@ export default function SessionsPage() {
       <div className="absolute bottom-0 right-1/4 w-80 h-80 bg-blue-500/5 rounded-full blur-3xl"></div>
       
       {/* Header - Mobile Optimized */}
-      <header className="bg-black/50 backdrop-blur-xl border-b border-gray-800/50 sticky top-0 z-50">
+      <header className="bg-black/50 backdrop-blur-xl border-b border-gray-800/50 sticky top-0 z-50 hidden sm:block">
         <div className="max-w-7xl mx-auto px-3 sm:px-4 lg:px-8">
           <div className="flex items-center justify-between py-3 sm:py-4 gap-3">
             <div className="flex items-center space-x-2 min-w-0">

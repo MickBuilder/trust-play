@@ -10,7 +10,7 @@ import Link from 'next/link'
 import { Suspense } from 'react'
 
 interface ProfilePageProps {
-  searchParams: { edit?: string }
+  searchParams: Promise<{ edit?: string }>
 }
 
 export default async function ProfilePage({ searchParams }: ProfilePageProps) {
@@ -30,7 +30,8 @@ export default async function ProfilePage({ searchParams }: ProfilePageProps) {
     redirect('/onboarding')
   }
 
-  const isEditing = searchParams.edit === 'true'
+  const resolvedSearchParams = await searchParams
+  const isEditing = resolvedSearchParams.edit === 'true'
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-black via-gray-900 to-black relative overflow-hidden">
@@ -39,8 +40,8 @@ export default async function ProfilePage({ searchParams }: ProfilePageProps) {
       <div className="absolute top-0 left-1/4 w-96 h-96 bg-green-500/5 rounded-full blur-3xl"></div>
       <div className="absolute bottom-0 right-1/4 w-80 h-80 bg-blue-500/5 rounded-full blur-3xl"></div>
       
-      {/* Header */}
-      <header className="bg-black/50 backdrop-blur-xl border-b border-gray-800/50 sticky top-0 z-50">
+      {/* Header - Hidden on Mobile */}
+      <header className="bg-black/50 backdrop-blur-xl border-b border-gray-800/50 sticky top-0 z-50 hidden sm:block">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center py-6">
             <div className="flex items-center space-x-4">
@@ -75,7 +76,7 @@ export default async function ProfilePage({ searchParams }: ProfilePageProps) {
         </div>
       </header>
 
-      {/* Main Content */}
+      {/* Main Content - Mobile Optimized */}
       <main className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8 relative z-10">
         <Suspense fallback={<ProfileSkeleton />}>
           {isEditing ? (
