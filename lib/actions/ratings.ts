@@ -315,7 +315,7 @@ function calculateRatingBreakdown(ratings: { overall_score: number }[]): Record<
   }
 
   ratings.forEach(rating => {
-    const score = Math.floor(rating.overall_score).toString()
+    const score = Math.round(rating.overall_score).toString()
     breakdown[score] = (breakdown[score] || 0) + 1
   })
 

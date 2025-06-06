@@ -113,11 +113,21 @@ export function QRScanner({ onScanSuccess, onScanError, onClose, className }: QR
       setScanning(false)
     }
   }
+  const lastScannedRef = useRef<string>('')
+  const lastScanTimeRef = useRef<number>(0)
 
-  const handleScanResult = (data: string) => {
-    try {
-      // First try to parse as session QR data
-      const sessionData = parseSessionQRData(data)
+   const handleScanResult = (data: string) => {
+    // Prevent duplicate scans within 3 seconds
+    const now = Date.now()
+    if (data === lastScannedRef.current && now - lastScanTimeRef.current < 3000) {
+      return
+    }
+    lastScannedRef.current = data
+    lastScanTimeRef.current = now
+
+     try {
+       // First try to parse as session QR data
+       const sessionData = parseSessionQRData(data)
       
       if (sessionData) {
         // Validate QR code is not too old
@@ -157,30 +167,36 @@ export function QRScanner({ onScanSuccess, onScanError, onClose, className }: QR
     }
   }
 
-  const requestCameraPermission = async () => {
-    try {
-      await navigator.mediaDevices.getUserMedia({ video: true })
-      await startScanning()
-    } catch (err) {
-      setCameraPermission('denied')
-      setError('Camera permission is required to scan QR codes')
-    }
-  }
-
-  const switchCamera = async () => {
-    if (!qrScannerRef.current) return
-
-    try {
-      const cameras = await QrScanner.listCameras(true)
-      if (cameras.length > 1) {
-        // Toggle between front and back camera
-        await qrScannerRef.current.setCamera(cameras[1].id || 'user')
+const requestCameraPermission = async () => {
+     try {
+       await navigator.mediaDevices.getUserMedia({ video: true })
+      setCameraPermission('granted')
+       await startScanning()
+     } catch (err) {
+       setCameraPermission('denied')
+       setError('Camera permission is required to scan QR codes')
+      if (onScanError) {
+        onScanError('Camera permission denied')
       }
-    } catch (err) {
-      console.error('Failed to switch camera:', err)
-      toast.error('Failed to switch camera')
-    }
-  }
+     }
+   }
+  const [currentCameraIndex, setCurrentCameraIndex] = useState(0)
+
+   const switchCamera = async () => {
+     if (!qrScannerRef.current) return
+
+     try {
+       const cameras = await QrScanner.listCameras(true)
+       if (cameras.length > 1) {
+        const nextIndex = (currentCameraIndex + 1) % cameras.length
+        await qrScannerRef.current.setCamera(cameras[nextIndex].id)
+        setCurrentCameraIndex(nextIndex)
+       }
+     } catch (err) {
+       console.error('Failed to switch camera:', err)
+       toast.error('Failed to switch camera')
+     }
+   }
 
   return (
     <Card className={`glass-card ${className}`}>

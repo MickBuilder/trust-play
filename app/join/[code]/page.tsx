@@ -37,7 +37,7 @@ export default async function JoinSessionPage({ params }: JoinSessionPageProps) 
   }
 
   // Get session by code with participants and organizer
-  const session = await getSessionByQRCode(code) as SessionWithParticipants | null
+  const session = await getSessionByQRCode(code)
   
   if (!session) {
     return (
@@ -77,7 +77,7 @@ export default async function JoinSessionPage({ params }: JoinSessionPageProps) 
   const isSessionFull = session.current_participants >= session.max_participants
   
   // Check if user is already a participant
-  const isParticipant = session.participants?.some((p: any) => p.user.id === user.id) || false
+  const isParticipant = session.participants?.some((p) => p.user.id === user.id) || false
   const isOrganizer = user.id === session.organizer_id
 
   // Get user profile for proper typing
@@ -93,6 +93,7 @@ export default async function JoinSessionPage({ params }: JoinSessionPageProps) 
     if (isSessionPast) return { label: 'Ended', color: 'secondary' }
     if (isSessionActive) return { label: 'Active', color: 'default' }
     if (isSessionFull) return { label: 'Full', color: 'secondary' }
+    if (isFuture(sessionDate)) return { label: 'Upcoming', color: 'default' }
     return { label: 'Open', color: 'default' }
   }
 
@@ -118,7 +119,7 @@ export default async function JoinSessionPage({ params }: JoinSessionPageProps) 
             <CardHeader className="px-4 sm:px-6 pt-4 sm:pt-6 pb-3 sm:pb-4">
               <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 sm:gap-0">
                 <CardTitle className="text-white text-lg sm:text-xl pr-2">{session.title}</CardTitle>
-                <Badge variant={sessionStatus.color as any} className="self-start sm:self-center">
+                <Badge variant={sessionStatus.color} className="self-start sm:self-center">
                   {sessionStatus.label}
                 </Badge>
               </div>
