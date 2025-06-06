@@ -9,6 +9,7 @@ import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Separator } from '@/components/ui/separator'
+import { SessionQRCode } from './SessionQRCode'
 import { 
   Calendar, 
   Clock, 
@@ -20,7 +21,6 @@ import {
   UserMinus,
   Crown,
   Share2,
-  MoreHorizontal,
   QrCode,
   AlertCircle,
   CheckCircle,
@@ -47,6 +47,7 @@ export function SessionDetails({ session }: SessionDetailsProps) {
   const [isPending, startTransition] = useTransition()
   const [actionType, setActionType] = useState<'join' | 'leave' | 'close' | 'cancel' | 'remove' | null>(null)
   const [showParticipantManagement, setShowParticipantManagement] = useState(false)
+  const [showQRCode, setShowQRCode] = useState(false)
   const [participantToRemove, setParticipantToRemove] = useState<string | null>(null)
 
   const sessionDate = new Date(session.date_time)
@@ -62,13 +63,16 @@ export function SessionDetails({ session }: SessionDetailsProps) {
   const isParticipant = session.participants?.some(p => p.user.id === user?.id) || false
   
   // Calculate participant percentage
-  const participantPercentage = (session.current_participants / session.max_participants) * 100
+  const participantPercentage =
+    session.max_participants > 0
+      ? (session.current_participants / session.max_participants) * 100
+      : 0
 
   const getSessionStatus = () => {
     if (session.status === 'cancelled') return { label: 'Cancelled', color: 'destructive' }
     if (session.status === 'completed') return { label: 'Completed', color: 'secondary' }
-    if (isSessionPast) return { label: 'Ended', color: 'secondary' }
     if (isSessionActive) return { label: 'Active', color: 'default' }
+    if (isSessionPast)   return { label: 'Ended',  color: 'secondary' }
     if (isSessionFull) return { label: 'Full', color: 'secondary' }
     return { label: 'Open', color: 'default' }
   }
@@ -202,76 +206,81 @@ export function SessionDetails({ session }: SessionDetailsProps) {
   const sessionStatus = getSessionStatus()
 
   return (
-    <div className="space-y-6">
-      {/* Header */}
-      <div className="flex items-center justify-between">
+    <div className="space-y-4 sm:space-y-6">
+      {/* Header - Mobile Optimized */}
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 sm:gap-0">
         <Button 
           variant="ghost" 
           onClick={() => router.back()}
-          className="text-gray-400 hover:text-white"
+          className="text-gray-400 hover:text-white self-start p-2 sm:px-4 sm:py-2"
+          size="sm"
         >
-          <ArrowLeft className="w-4 h-4 mr-2" />
-          Back to Sessions
+          <ArrowLeft className="w-4 h-4 mr-1 sm:mr-2" />
+          <span className="text-sm sm:text-base">Back to Sessions</span>
         </Button>
         
-        <div className="flex items-center gap-2">
-          <Button 
-            variant="outline" 
-            size="sm" 
-            onClick={handleShare}
-            className="border-gray-700/50 text-gray-300 hover:bg-gray-800/50"
-          >
-            <Share2 className="w-4 h-4 mr-2" />
-            Share
-          </Button>
-          {session.qr_code_data && (
+        {/* Action Buttons - Mobile Stack */}
+        <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 w-full sm:w-auto">
+          <div className="flex gap-2">
             <Button 
               variant="outline" 
-              size="sm"
-              className="border-gray-700/50 text-gray-300 hover:bg-gray-800/50"
+              size="sm" 
+              onClick={handleShare}
+              className="flex-1 sm:flex-none border-gray-700/50 text-gray-300 hover:bg-gray-800/50 h-10 sm:h-8 text-sm"
             >
-              <QrCode className="w-4 h-4 mr-2" />
-              QR Code
+              <Share2 className="w-4 h-4 mr-2" />
+              Share
             </Button>
-          )}
+            {session.qr_code_data && (
+              <Button 
+                variant="outline" 
+                size="sm"
+                onClick={() => setShowQRCode(!showQRCode)}
+                className="flex-1 sm:flex-none border-gray-700/50 text-gray-300 hover:bg-gray-800/50 h-10 sm:h-8 text-sm"
+              >
+                <QrCode className="w-4 h-4 mr-2" />
+                QR Code
+              </Button>
+            )}
+          </div>
           {isOrganizer && (
             <Button 
               variant="outline" 
               size="sm"
               onClick={() => setShowParticipantManagement(!showParticipantManagement)}
-              className="border-gray-700/50 text-gray-300 hover:bg-gray-800/50"
+              className="border-gray-700/50 text-gray-300 hover:bg-gray-800/50 h-10 sm:h-8 text-sm"
             >
               <Settings className="w-4 h-4 mr-2" />
-              Manage
+              Settings
             </Button>
           )}
         </div>
       </div>
 
-      {/* Session Title and Status */}
-      <div className="space-y-4">
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+      {/* Session Title and Status - Mobile Optimized */}
+      <div className="space-y-3 sm:space-y-4">
+        <div className="flex flex-col gap-3 sm:gap-4">
           <div>
-            <h1 className="text-3xl font-bold text-white mb-2">{session.title}</h1>
-            <p className="text-gray-400">
+            <h1 className="text-xl sm:text-2xl lg:text-3xl font-bold text-white mb-2 leading-tight">{session.title}</h1>
+            <p className="text-sm sm:text-base text-gray-400">
               Organized by {session.organizer?.display_name || 'Unknown Organizer'}
             </p>
           </div>
-          <div className="flex items-center gap-2">
+          <div className="flex flex-wrap items-center gap-2">
             <Badge 
               variant={sessionStatus.color as any} 
-              className="text-sm"
+              className="text-xs sm:text-sm px-2 py-1"
             >
               {sessionStatus.label}
             </Badge>
             {isOrganizer && (
-              <Badge variant="outline" className="text-sm border-yellow-600 text-yellow-400">
+              <Badge variant="outline" className="text-xs sm:text-sm border-yellow-600 text-yellow-400 px-2 py-1">
                 <Crown className="w-3 h-3 mr-1" />
                 Organizer
               </Badge>
             )}
             {isParticipant && !isOrganizer && (
-              <Badge variant="outline" className="text-sm border-green-600 text-green-400">
+              <Badge variant="outline" className="text-xs sm:text-sm border-green-600 text-green-400 px-2 py-1">
                 <CheckCircle className="w-3 h-3 mr-1" />
                 Joined
               </Badge>
@@ -616,6 +625,17 @@ export function SessionDetails({ session }: SessionDetailsProps) {
                         </Button>
                       </div>
                     )}
+
+                    {/* Rating Button for Completed Sessions */}
+                    {session.status === 'completed' && isParticipant && (
+                      <Button 
+                        onClick={() => router.push(`/sessions/${session.id}/rate`)}
+                        className="w-full bg-gradient-to-r from-yellow-500 to-orange-500 hover:from-yellow-600 hover:to-orange-600"
+                      >
+                        <Trophy className="w-4 h-4 mr-2" />
+                        Rate Players
+                      </Button>
+                    )}
                   </div>
                 ) : (
                   <div className="text-center py-4">
@@ -676,6 +696,11 @@ export function SessionDetails({ session }: SessionDetailsProps) {
               )}
             </CardContent>
           </Card>
+
+          {/* QR Code Display */}
+          {showQRCode && session.qr_code_data && (
+            <SessionQRCode session={session} />
+          )}
         </div>
       </div>
     </div>

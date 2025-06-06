@@ -15,9 +15,9 @@ async function SessionsContent() {
     console.error('Error fetching sessions:', error)
     return (
       <Card className="glass-card">
-        <CardContent className="p-12 text-center">
-          <h3 className="text-xl font-semibold text-white mb-2">Error Loading Sessions</h3>
-          <p className="text-gray-400">
+        <CardContent className="p-8 sm:p-12 text-center">
+          <h3 className="text-lg sm:text-xl font-semibold text-white mb-2">Error Loading Sessions</h3>
+          <p className="text-gray-400 text-sm sm:text-base">
             Unable to load sessions at this time. Please try again later.
           </p>
         </CardContent>
@@ -26,36 +26,36 @@ async function SessionsContent() {
   }
 }
 
-// Loading skeleton component
+// Loading skeleton component - Mobile Optimized
 function SessionsLoading() {
   return (
-    <div className="space-y-6">
+    <div className="space-y-4 sm:space-y-6">
       {/* Header skeleton */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <div className="h-8 w-64 bg-gray-700/50 rounded animate-pulse mb-2"></div>
-          <div className="h-4 w-80 bg-gray-700/30 rounded animate-pulse"></div>
+          <div className="h-6 sm:h-8 w-48 sm:w-64 bg-gray-700/50 rounded animate-pulse mb-2"></div>
+          <div className="h-3 sm:h-4 w-64 sm:w-80 bg-gray-700/30 rounded animate-pulse"></div>
         </div>
-        <div className="h-10 w-32 bg-gray-700/50 rounded animate-pulse"></div>
+        <div className="h-9 sm:h-10 w-28 sm:w-32 bg-gray-700/50 rounded animate-pulse"></div>
       </div>
 
       {/* Filters skeleton */}
-      <div className="flex flex-col sm:flex-row gap-4">
-        <div className="h-10 bg-gray-700/50 rounded animate-pulse flex-1"></div>
-        <div className="h-10 bg-gray-700/50 rounded animate-pulse w-32"></div>
-        <div className="h-10 bg-gray-700/50 rounded animate-pulse w-32"></div>
+      <div className="flex flex-col sm:flex-row gap-3 sm:gap-4">
+        <div className="h-9 sm:h-10 bg-gray-700/50 rounded animate-pulse flex-1"></div>
+        <div className="h-9 sm:h-10 bg-gray-700/50 rounded animate-pulse w-28 sm:w-32"></div>
+        <div className="h-9 sm:h-10 bg-gray-700/50 rounded animate-pulse w-28 sm:w-32"></div>
       </div>
 
-      {/* Grid skeleton */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      {/* Grid skeleton - Mobile Responsive */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
         {[...Array(6)].map((_, i) => (
           <Card key={i} className="glass-card animate-pulse">
-            <CardContent className="p-6">
-              <div className="space-y-4">
-                <div className="h-6 bg-gray-700/50 rounded"></div>
-                <div className="h-4 bg-gray-700/30 rounded"></div>
-                <div className="h-4 bg-gray-700/30 rounded w-3/4"></div>
-                <div className="h-4 bg-gray-700/30 rounded w-1/2"></div>
+            <CardContent className="p-4 sm:p-6">
+              <div className="space-y-3 sm:space-y-4">
+                <div className="h-5 sm:h-6 bg-gray-700/50 rounded"></div>
+                <div className="h-3 sm:h-4 bg-gray-700/30 rounded"></div>
+                <div className="h-3 sm:h-4 bg-gray-700/30 rounded w-3/4"></div>
+                <div className="h-3 sm:h-4 bg-gray-700/30 rounded w-1/2"></div>
               </div>
             </CardContent>
           </Card>
@@ -73,31 +73,31 @@ export default function SessionsPage() {
       <div className="absolute top-0 left-1/4 w-96 h-96 bg-green-500/5 rounded-full blur-3xl"></div>
       <div className="absolute bottom-0 right-1/4 w-80 h-80 bg-blue-500/5 rounded-full blur-3xl"></div>
       
-      {/* Header */}
+      {/* Header - Mobile Optimized */}
       <header className="bg-black/50 backdrop-blur-xl border-b border-gray-800/50 sticky top-0 z-50">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center py-6">
-            <div className="flex items-center space-x-4">
+        <div className="max-w-7xl mx-auto px-3 sm:px-4 lg:px-8">
+          <div className="flex items-center justify-between py-3 sm:py-4 gap-3">
+            <div className="flex items-center space-x-2 min-w-0">
               <Link href="/dashboard">
-                <Button variant="ghost" size="sm" className="text-gray-400 hover:text-white">
-                  <ArrowLeft className="w-4 h-4 mr-2" />
-                  Back to Dashboard
+                <Button variant="ghost" size="sm" className="text-gray-400 hover:text-white p-2 h-8 sm:h-9">
+                  <ArrowLeft className="w-4 h-4 mr-1" />
+                  <span className="hidden sm:inline text-xs sm:text-sm">Back</span>
                 </Button>
               </Link>
-              <div className="h-6 w-px bg-gray-700"></div>
-              <div className="flex items-center space-x-2">
-                <div className="w-8 h-8 bg-gradient-to-br from-green-500 via-blue-500 to-purple-600 rounded-lg flex items-center justify-center shadow-lg shadow-green-500/25">
-                  <Trophy className="w-4 h-4 text-white" />
+              <div className="h-4 w-px bg-gray-700 hidden sm:block"></div>
+              <div className="flex items-center space-x-2 min-w-0">
+                <div className="w-6 h-6 sm:w-8 sm:h-8 bg-gradient-to-br from-green-500 via-blue-500 to-purple-600 rounded-lg flex items-center justify-center shadow-lg shadow-green-500/25 flex-shrink-0">
+                  <Trophy className="w-3 h-3 sm:w-4 sm:h-4 text-white" />
                 </div>
-                <span className="text-xl font-bold gradient-text">Sessions</span>
+                <span className="text-base sm:text-lg lg:text-xl font-bold gradient-text truncate">Sessions</span>
               </div>
             </div>
           </div>
         </div>
       </header>
       
-      {/* Main Content */}
-      <main className="relative z-10 min-h-screen p-4 pt-8">
+      {/* Main Content - Mobile Optimized */}
+      <main className="relative z-10 min-h-screen p-3 sm:p-4 pt-4 sm:pt-8">
         <div className="max-w-7xl mx-auto">
           <Suspense fallback={<SessionsLoading />}>
             <SessionsContent />
