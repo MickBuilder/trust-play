@@ -10,9 +10,10 @@ import { Textarea } from '@/components/ui/textarea'
 import { Label } from '@/components/ui/label'
 import { Checkbox } from '@/components/ui/checkbox'
 import { Alert, AlertDescription } from '@/components/ui/alert'
-import { User, Star, MessageSquare, EyeOff, Send, AlertCircle } from 'lucide-react'
+import { Star, MessageSquare, EyeOff, Send, AlertCircle, User } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { toast } from 'sonner'
+import Image from 'next/image'
 
 interface PlayerRatingProps {
   player: {
@@ -20,7 +21,6 @@ interface PlayerRatingProps {
     display_name: string
     profile_image_url?: string
   }
-  sessionId: string
   onSubmit: (rating: {
     overall_score: number
     play_type: PlayType
@@ -40,7 +40,6 @@ interface RatingFormData {
 
 export function PlayerRating({ 
   player, 
-  sessionId, 
   onSubmit, 
   onCancel, 
   className 
@@ -126,7 +125,9 @@ export function PlayerRating({
           <CardTitle className="flex items-center gap-3 text-white">
             <div className="relative">
               {player.profile_image_url ? (
-                <img
+                <Image
+                  width={32}
+                  height={32}
                   src={player.profile_image_url}
                   alt={player.display_name}
                   className="w-12 h-12 rounded-full object-cover"

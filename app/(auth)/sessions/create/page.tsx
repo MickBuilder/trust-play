@@ -1,8 +1,8 @@
 import { Suspense } from 'react'
 import { CreateSessionForm } from '@/components/sessions/CreateSessionForm'
 import { Card, CardContent } from '@/components/ui/card'
+import { ArrowLeft, Plus } from 'lucide-react'
 import { Button } from '@/components/ui/button'
-import { Trophy, ArrowLeft, Plus } from 'lucide-react'
 import Link from 'next/link'
 
 export default function CreateSessionPage() {

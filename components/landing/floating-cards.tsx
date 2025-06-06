@@ -99,7 +99,7 @@ export function FloatingCards() {
           animate={isInView ? "visible" : "hidden"}
           className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 perspective-1000"
         >
-          {floatingCards.map((card, index) => (
+          {floatingCards.map((card) => (
             <motion.div
               key={card.id}
               variants={cardVariants}

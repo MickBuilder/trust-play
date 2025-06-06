@@ -2,7 +2,7 @@
 
 import { revalidatePath } from 'next/cache'
 import { createClient } from '@/lib/supabase/server'
-import { Rating, RatingInsert, RatingWithDetails, PlayType } from '@/lib/types/database'
+import { RatingInsert, RatingWithDetails, PlayType } from '@/lib/types/database'
 
 // Submit a rating for a player in a session
 export async function submitRating(data: {
@@ -64,7 +64,7 @@ export async function submitRating(data: {
   }
 
   // Check if rating already exists
-  const { data: existingRating, error: existingError } = await supabase
+  const { data: existingRating } = await supabase
     .from('ratings')
     .select('*')
     .eq('session_id', data.sessionId)
@@ -221,12 +221,14 @@ export async function getPendingRatings(userId: string) {
 
     // Find participants that haven't been rated (excluding the user themselves)
     const unratedParticipants = session.participants.filter(
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       (p: any) => p.user_id !== userId && !ratedUserIds.includes(p.user_id)
     )
 
     if (unratedParticipants.length > 0) {
       pendingRatings.push({
         session,
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         unratedParticipants: unratedParticipants.map((p: any) => p.user)
       })
     }
@@ -409,7 +411,7 @@ export async function getUserRatingTrends(userId: string, timeframe: 'week' | 'm
   const dailyRatings: Record<string, number[]> = {}
   const playTypeDaily: Record<string, Record<PlayType, number>> = {}
 
-  ratings.forEach((rating: any) => {
+  ratings.forEach((rating) => {
     const date = new Date(rating.session.date_time).toISOString().split('T')[0]
     
     if (!dailyRatings[date]) {
@@ -433,7 +435,7 @@ export async function getUserRatingTrends(userId: string, timeframe: 'week' | 'm
   }))
 
   // Calculate overall averages for the period
-  const allScores = ratings.map((r: any) => r.overall_score)
+  const allScores = ratings.map((r) => r.overall_score)
   const overallAverage = allScores.length > 0 ? allScores.reduce((sum, score) => sum + score, 0) / allScores.length : 0
 
   return {
@@ -480,7 +482,7 @@ export async function getUserPerformanceAnalytics(userId: string) {
 
   // Calculate basic stats
   const totalRatings = ratings.length
-  const averageRating = ratings.reduce((sum: number, r: any) => sum + r.overall_score, 0) / totalRatings
+  const averageRating = ratings.reduce((sum: number, r) => sum + r.overall_score, 0) / totalRatings
 
   // Play type analysis
   const playTypeStats: Record<PlayType, { count: number; averageRating: number; totalScore: number }> = {
@@ -492,7 +494,7 @@ export async function getUserPerformanceAnalytics(userId: string) {
     reliable: { count: 0, averageRating: 0, totalScore: 0 }
   }
 
-  ratings.forEach((rating: any) => {
+  ratings.forEach((rating) => {
     const playType = rating.play_type as PlayType
     playTypeStats[playType].count++
     playTypeStats[playType].totalScore += rating.overall_score
@@ -510,7 +512,7 @@ export async function getUserPerformanceAnalytics(userId: string) {
   
   const monthlyData: Record<string, { scores: number[]; count: number }> = {}
   
-  ratings.forEach((rating: any) => {
+  ratings.forEach((rating) => {
     const ratingDate = new Date(rating.session.date_time)
     if (ratingDate >= sixMonthsAgo) {
       const monthKey = `${ratingDate.getFullYear()}-${String(ratingDate.getMonth() + 1).padStart(2, '0')}`
@@ -534,9 +536,9 @@ export async function getUserPerformanceAnalytics(userId: string) {
 
   // Top performances (ratings 8+)
   const topPerformances = ratings
-    .filter((r: any) => r.overall_score >= 8)
+    .filter((r) => r.overall_score >= 8)
     .slice(0, 10)
-    .map((r: any) => ({
+    .map((r) => ({
       score: r.overall_score,
       playType: r.play_type,
       comment: r.comment,
@@ -547,7 +549,7 @@ export async function getUserPerformanceAnalytics(userId: string) {
 
   // Improvement areas (play types with lower averages)
   const improvementAreas = Object.entries(playTypeStats)
-    .filter(([_, stats]) => stats.count > 0 && stats.averageRating < averageRating)
+    .filter(([, stats]) => stats.count > 0 && stats.averageRating < averageRating)
     .sort((a, b) => a[1].averageRating - b[1].averageRating)
     .slice(0, 3)
     .map(([playType, stats]) => ({
@@ -596,9 +598,9 @@ export async function getSessionRatingSummary(sessionId: string) {
   }
 
   // Group ratings by participant
-  const participantRatings: Record<string, any[]> = {}
+  const participantRatings: Record<string, typeof ratings> = {}
   
-  ratings.forEach((rating: any) => {
+  ratings.forEach((rating) => {
     const userId = rating.rated_user_id
     if (!participantRatings[userId]) {
       participantRatings[userId] = []
@@ -607,7 +609,7 @@ export async function getSessionRatingSummary(sessionId: string) {
   })
 
   // Calculate participant summaries
-  const participantSummaries = Object.entries(participantRatings).map(([userId, userRatings]) => {
+  const participantSummaries = Object.entries(participantRatings).map(([, userRatings]) => {
     const averageRating = userRatings.reduce((sum, r) => sum + r.overall_score, 0) / userRatings.length
     
     // Count play types for this participant
@@ -646,7 +648,7 @@ export async function getSessionRatingSummary(sessionId: string) {
     technical: 0, social: 0, reliable: 0
   }
   
-  ratings.forEach((rating: any) => {
+  ratings.forEach((rating) => {
     sessionPlayTypeDistribution[rating.play_type as PlayType]++
   })
 
@@ -658,7 +660,7 @@ export async function getSessionRatingSummary(sessionId: string) {
     )
   })
 
-  const averageSessionRating = ratings.reduce((sum: number, r: any) => sum + r.overall_score, 0) / totalRatings
+  const averageSessionRating = ratings.reduce((sum: number, r) => sum + r.overall_score, 0) / totalRatings
 
   return {
     totalRatings,
@@ -668,60 +670,3 @@ export async function getSessionRatingSummary(sessionId: string) {
     averageSessionRating: Math.round(averageSessionRating * 10) / 10
   }
 }
-
-// Get rating comparison between two users
-export async function compareUserRatings(userId1: string, userId2: string) {
-  const supabase = await createClient()
-
-  const [user1Analytics, user2Analytics] = await Promise.all([
-    getUserPerformanceAnalytics(userId1),
-    getUserPerformanceAnalytics(userId2)
-  ])
-
-  if (!user1Analytics || !user2Analytics) {
-    return null
-  }
-
-  // Get user info
-  const { data: users, error } = await supabase
-    .from('users')
-    .select('id, display_name, current_overall_rating')
-    .in('id', [userId1, userId2])
-
-  if (error) {
-    console.error('Error fetching user info for comparison:', error)
-    return null
-  }
-
-  const user1Info = users.find(u => u.id === userId1)
-  const user2Info = users.find(u => u.id === userId2)
-
-  return {
-    user1: {
-      info: user1Info,
-      analytics: user1Analytics
-    },
-    user2: {
-      info: user2Info,
-      analytics: user2Analytics
-    },
-    comparison: {
-      ratingDifference: Math.round((user1Analytics.averageRating - user2Analytics.averageRating) * 10) / 10,
-      experienceDifference: user1Analytics.totalRatings - user2Analytics.totalRatings,
-      strongerPlayTypes: {
-        user1: Object.entries(user1Analytics.playTypeAnalysis)
-          .filter(([playType, stats]: [string, any]) => {
-            const user2Stats = user2Analytics.playTypeAnalysis[playType as PlayType]
-            return stats && user2Stats && stats.count > 0 && user2Stats.count > 0 && stats.averageRating > user2Stats.averageRating
-          })
-          .map(([playType]) => playType),
-        user2: Object.entries(user2Analytics.playTypeAnalysis)
-          .filter(([playType, stats]: [string, any]) => {
-            const user1Stats = user1Analytics.playTypeAnalysis[playType as PlayType]
-            return stats && user1Stats && stats.count > 0 && user1Stats.count > 0 && stats.averageRating > user1Stats.averageRating
-          })
-          .map(([playType]) => playType)
-      }
-    }
-  }
-} 

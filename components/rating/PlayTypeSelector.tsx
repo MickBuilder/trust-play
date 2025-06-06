@@ -1,6 +1,5 @@
 'use client'
 
-import { useState } from 'react'
 import { PlayType } from '@/lib/types/database'
 import { Card, CardContent } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'

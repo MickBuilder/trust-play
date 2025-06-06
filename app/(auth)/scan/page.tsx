@@ -11,7 +11,6 @@ import { QRScanner } from '@/components/sessions/QRScanner'
 import { 
   QrCode, 
   Keyboard,
-  ArrowLeft,
   Search
 } from 'lucide-react'
 import { toast } from 'sonner'
@@ -163,7 +162,7 @@ export default function ScanPage() {
                     <div className="text-xs text-gray-500 text-center space-y-1 px-2 sm:px-0">
                       <p>• Session codes are usually 6-8 characters</p>
                       <p>• Codes are not case-sensitive</p>
-                      <p>• Ask the organizer if you don't have the code</p>
+                      <p>• Ask the organizer if you don&apos;t have the code</p>
                     </div>
                   </CardContent>
                 </Card>
@@ -173,7 +172,7 @@ export default function ScanPage() {
             {/* Additional Options - Mobile Optimized */}
             <div className="text-center space-y-4 px-2 sm:px-0">
               <div className="text-sm text-gray-500">
-                Don't have a session to join?
+                Don&apos;t have a session to join?
               </div>
               <div className="flex flex-col sm:flex-row gap-3 justify-center">
                 <Button asChild variant="outline" className="border-gray-600 text-gray-300 h-11 sm:h-10 text-sm sm:text-base">

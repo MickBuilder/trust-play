@@ -5,9 +5,9 @@ import { EditSessionForm } from '@/components/sessions/EditSessionForm'
 import { Card, CardContent } from '@/components/ui/card'
 
 interface EditSessionPageProps {
-  params: {
+  params: Promise<{
     id: string
-  }
+  }>
 }
 
 // This component will fetch the session data server-side
@@ -63,7 +63,9 @@ function EditSessionLoading() {
   )
 }
 
-export default function EditSessionPage({ params }: EditSessionPageProps) {
+export default async function EditSessionPage({ params }: EditSessionPageProps) {
+  const { id } = await params
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-black via-gray-900 to-black relative overflow-hidden">
       {/* Background Elements */}
@@ -75,7 +77,7 @@ export default function EditSessionPage({ params }: EditSessionPageProps) {
       <main className="relative z-10 min-h-screen p-4 pt-8">
         <div className="max-w-7xl mx-auto">
           <Suspense fallback={<EditSessionLoading />}>
-            <EditSessionContent sessionId={params.id} />
+            <EditSessionContent sessionId={id} />
           </Suspense>
         </div>
       </main>

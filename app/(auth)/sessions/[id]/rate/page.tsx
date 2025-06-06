@@ -11,13 +11,13 @@ import {
   Users, 
   Clock, 
   MapPin, 
-  Calendar,
-  CheckCircle,
+  Calendar, 
   AlertCircle
 } from 'lucide-react'
 import { format } from 'date-fns'
 import Link from 'next/link'
-import { SessionWithParticipants } from '@/lib/types/database'
+import { PlayType, SessionWithParticipants, User } from '@/lib/types/database'
+import Image from 'next/image'
 
 interface RateSessionPageProps {
   params: Promise<{ id: string }>
@@ -44,7 +44,7 @@ export default async function RateSessionPage({ params, searchParams }: RateSess
   }
 
   // Check if user was a participant
-  const isParticipant = session.participants?.some((p: any) => p.user.id === user.id)
+  const isParticipant = session.participants?.some((p) => p.user.id === user.id)
   
   if (!isParticipant) {
     redirect(`/sessions/${sessionId}`)
@@ -57,7 +57,7 @@ export default async function RateSessionPage({ params, searchParams }: RateSess
 
   // Get pending ratings for this user
   const pendingRatings = await getPendingRatings(user.id)
-  const sessionPendingRatings = pendingRatings.find((pr: any) => pr.session.id === sessionId)
+  const sessionPendingRatings = pendingRatings.find((pr) => pr.session.id === sessionId)
   
   if (!sessionPendingRatings || sessionPendingRatings.unratedParticipants.length === 0) {
     // No pending ratings for this session
@@ -66,7 +66,7 @@ export default async function RateSessionPage({ params, searchParams }: RateSess
 
   // Get the selected player or default to first unrated participant
   const selectedPlayer = selectedPlayerId 
-    ? sessionPendingRatings.unratedParticipants.find((p: any) => p.id === selectedPlayerId)
+    ? sessionPendingRatings.unratedParticipants.find((p: User) => p.id === selectedPlayerId)
     : sessionPendingRatings.unratedParticipants[0]
 
   if (!selectedPlayer) {
@@ -76,7 +76,7 @@ export default async function RateSessionPage({ params, searchParams }: RateSess
   // Handle rating submission
   async function handleRatingSubmit(rating: {
     overall_score: number
-    play_type: any
+    play_type: PlayType
     comment?: string
     is_anonymous: boolean
   }) {
@@ -94,7 +94,7 @@ export default async function RateSessionPage({ params, searchParams }: RateSess
 
       // Check if there are more players to rate
       const remainingPlayers = sessionPendingRatings!.unratedParticipants.filter(
-        (p: any) => p.id !== selectedPlayer.id
+        (p: User) => p.id !== selectedPlayer.id
       )
 
       if (remainingPlayers.length > 0) {
@@ -110,7 +110,7 @@ export default async function RateSessionPage({ params, searchParams }: RateSess
   }
 
   const remainingCount = sessionPendingRatings.unratedParticipants.length
-  const currentIndex = sessionPendingRatings.unratedParticipants.findIndex((p: any) => p.id === selectedPlayer.id) + 1
+  const currentIndex = sessionPendingRatings.unratedParticipants.findIndex((p: User) => p.id === selectedPlayer.id) + 1
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-black via-gray-900 to-black relative overflow-hidden">
@@ -188,7 +188,6 @@ export default async function RateSessionPage({ params, searchParams }: RateSess
           {/* Rating Interface */}
           <PlayerRating
             player={selectedPlayer}
-            sessionId={sessionId}
             onSubmit={handleRatingSubmit}
             onCancel={() => redirect(`/sessions/${sessionId}`)}
           />
@@ -204,15 +203,17 @@ export default async function RateSessionPage({ params, searchParams }: RateSess
               <CardContent>
                 <div className="grid grid-cols-1 gap-2">
                   {sessionPendingRatings.unratedParticipants
-                    .filter((p: any) => p.id !== selectedPlayer.id)
-                    .map((player: any) => (
+                    .filter((p: User) => p.id !== selectedPlayer.id)
+                    .map((player: User) => (
                       <Link
                         key={player.id}
                         href={`/sessions/${sessionId}/rate?player=${player.id}`}
                         className="flex items-center gap-3 p-3 rounded-lg bg-white/5 hover:bg-white/10 transition-colors"
                       >
                         {player.profile_image_url ? (
-                          <img
+                          <Image
+                            width={32}
+                            height={32}
                             src={player.profile_image_url}
                             alt={player.display_name}
                             className="w-8 h-8 rounded-full object-cover"

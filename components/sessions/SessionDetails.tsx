@@ -69,12 +69,12 @@ export function SessionDetails({ session }: SessionDetailsProps) {
       : 0
 
   const getSessionStatus = () => {
-    if (session.status === 'cancelled') return { label: 'Cancelled', color: 'destructive' }
-    if (session.status === 'completed') return { label: 'Completed', color: 'secondary' }
-    if (isSessionActive) return { label: 'Active', color: 'default' }
-    if (isSessionPast)   return { label: 'Ended',  color: 'secondary' }
-    if (isSessionFull) return { label: 'Full', color: 'secondary' }
-    return { label: 'Open', color: 'default' }
+    if (session.status === 'cancelled') return { label: 'Cancelled', color: 'destructive' as const }
+    if (session.status === 'completed') return { label: 'Completed', color: 'secondary' as const }
+    if (isSessionActive) return { label: 'Active', color: 'default' as const }
+    if (isSessionPast)   return { label: 'Ended',  color: 'secondary' as const }
+    if (isSessionFull) return { label: 'Full', color: 'secondary' as const }
+    return { label: 'Open', color: 'default' as const }
   }
 
   const handleJoinSession = () => {
@@ -196,6 +196,8 @@ export function SessionDetails({ session }: SessionDetailsProps) {
         // Fallback to clipboard
         await navigator.clipboard.writeText(window.location.href)
         toast.success('Session link copied to clipboard!')
+        console.log('Session link copied to clipboard!')
+        console.error(error)
       }
     } else {
       await navigator.clipboard.writeText(window.location.href)
@@ -303,7 +305,7 @@ export function SessionDetails({ session }: SessionDetailsProps) {
           </div>
           <div className="flex flex-wrap items-center gap-2">
             <Badge 
-              variant={sessionStatus.color as any} 
+              variant={sessionStatus.color} 
               className="text-xs sm:text-sm px-2 py-1"
             >
               {sessionStatus.label}
@@ -402,7 +404,7 @@ export function SessionDetails({ session }: SessionDetailsProps) {
                     <div key={participant.id} className="flex items-center justify-between p-3 bg-gray-800/30 rounded-lg">
                       <div className="flex items-center gap-3">
                         <Avatar className="w-8 h-8">
-                          <AvatarImage src={(participant.user as any).avatar_url || undefined} />
+                          <AvatarImage src={participant.user.profile_image_url || undefined} />
                           <AvatarFallback className="bg-gray-700 text-gray-300">
                             {participant.user.display_name?.[0]?.toUpperCase() || 'U'}
                           </AvatarFallback>
@@ -412,7 +414,7 @@ export function SessionDetails({ session }: SessionDetailsProps) {
                             {participant.user.display_name || 'Unknown Player'}
                           </p>
                           <p className="text-xs text-gray-400">
-                            Joined {formatDistanceToNow(new Date((participant as any).created_at || Date.now()), { addSuffix: true })}
+                            Joined {formatDistanceToNow(new Date(participant.joined_at || Date.now()), { addSuffix: true })}
                           </p>
                         </div>
                       </div>
@@ -530,7 +532,7 @@ export function SessionDetails({ session }: SessionDetailsProps) {
                     <div key={participant.id} className="flex items-center justify-between">
                       <div className="flex items-center gap-3">
                         <Avatar className="w-8 h-8">
-                          <AvatarImage src={(participant.user as any).avatar_url || undefined} />
+                          <AvatarImage src={participant.user.profile_image_url || undefined} />
                           <AvatarFallback className="bg-gray-700 text-gray-300">
                             {participant.user.display_name?.[0]?.toUpperCase() || 'U'}
                           </AvatarFallback>
@@ -540,7 +542,7 @@ export function SessionDetails({ session }: SessionDetailsProps) {
                             {participant.user.display_name || 'Unknown Player'}
                           </p>
                           <p className="text-xs text-gray-400">
-                            Joined {formatDistanceToNow(new Date((participant as any).created_at || Date.now()), { addSuffix: true })}
+                            Joined {formatDistanceToNow(new Date(participant.joined_at || Date.now()), { addSuffix: true })}
                           </p>
                         </div>
                       </div>

@@ -8,8 +8,6 @@ import {
   Calendar, 
   QrCode, 
   User, 
-  Search,
-  Trophy
 } from 'lucide-react'
 
 const navigation = [

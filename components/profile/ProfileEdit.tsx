@@ -55,7 +55,6 @@ interface ProfileEditProps {
 export function ProfileEdit({ user }: ProfileEditProps) {
   const router = useRouter()
   const [isPending, startTransition] = useTransition()
-  const [profileImage, setProfileImage] = useState<File | null>(null)
   const [imagePreview, setImagePreview] = useState<string | null>(null)
   const [uploadedImageUrl, setUploadedImageUrl] = useState<string | null>(null)
 
@@ -92,7 +91,6 @@ export function ProfileEdit({ user }: ProfileEditProps) {
         return
       }
 
-      setProfileImage(file)
       const reader = new FileReader()
       reader.onload = (e) => setImagePreview(e.target?.result as string)
       reader.readAsDataURL(file)
@@ -104,7 +102,7 @@ export function ProfileEdit({ user }: ProfileEditProps) {
         
         const result = await uploadProfileImage(formData)
         if (result.success) {
-          setUploadedImageUrl(result.url)
+          setUploadedImageUrl(result.imageUrl)
           toast.success('Image uploaded successfully!')
         }
       } catch (error) {

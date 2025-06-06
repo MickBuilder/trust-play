@@ -1,4 +1,3 @@
-import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Suspense } from 'react'
 import { Trophy } from 'lucide-react'

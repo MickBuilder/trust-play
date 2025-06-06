@@ -8,9 +8,7 @@ import { Alert, AlertDescription } from '@/components/ui/alert'
 import { 
   Camera, 
   CameraOff, 
-  Loader2,
   AlertCircle,
-  CheckCircle,
   RotateCw,
   X
 } from 'lucide-react'
@@ -78,7 +76,7 @@ export function QRScanner({ onScanSuccess, onScanError, onClose, className }: QR
         qrScannerRef.current.destroy()
       }
     }
-  }, [])
+  },)
 
   const startScanning = async () => {
     if (!qrScannerRef.current) return
@@ -174,7 +172,7 @@ const requestCameraPermission = async () => {
        await startScanning()
      } catch (err) {
        setCameraPermission('denied')
-       setError('Camera permission is required to scan QR codes')
+       setError('Camera permission is required to scan QR codes : ' + err)
       if (onScanError) {
         onScanError('Camera permission denied')
       }

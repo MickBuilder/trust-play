@@ -76,6 +76,37 @@ export async function getSessionWithDetails(id: string): Promise<SessionWithDeta
   
   return {
     ...data,
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    participants: data.participants?.map((p: any) => p.user) || [],
+    participant_count: data.participants?.length || 0
+  }
+}
+
+export async function getSessionWithDetailsByQRCode(qrCode: string): Promise<SessionWithDetails | null> {
+  const supabase = await createClient()
+  
+  const { data, error } = await supabase
+    .from('sessions')
+    .select(`
+      *,
+      organizer:users!organizer_id(*),
+      mvp_user:users!mvp_user_id(*),
+      participants:session_participants(
+        *,
+        user:users(*)
+      )
+    `)
+    .eq('qr_code_data', qrCode)
+    .single()
+  
+  if (error) {
+    console.error('Error fetching session with details by QR code:', error)
+    return null
+  }
+  
+  return {
+    ...data,
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     participants: data.participants?.map((p: any) => p.user) || [],
     participant_count: data.participants?.length || 0
   }
@@ -166,6 +197,7 @@ export async function getSessionParticipants(sessionId: string): Promise<User[]>
     return []
   }
   
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   return data?.map((p: any) => p.user) || []
 }
 

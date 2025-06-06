@@ -1,5 +1,5 @@
 import { createClient } from '@/lib/supabase/server'
-import { Rating, RatingInsert, RatingWithDetails, PlayType } from '@/lib/types/database'
+import { Rating, RatingInsert, RatingWithDetails, PlayType, User, Session } from '@/lib/types/database'
 import { updateUserRatingStats } from './users'
 
 export async function createRating(ratingData: RatingInsert): Promise<Rating | null> {
@@ -165,18 +165,29 @@ export async function checkIfUserCanRate(sessionId: string, raterId: string, rat
   return true
 }
 
-export async function getPendingRatingsForUser(userId: string): Promise<Array<{session: any, participants: any[]}>> {
+export async function getPendingRatingsForUser(userId: string): Promise<Array<{session: Session, participants: User[]}>> {
   const supabase = await createClient()
   
   // Get completed sessions where user participated but hasn't rated all other participants
   const { data: userSessions } = await supabase
     .from('session_participants')
     .select(`
-      session:sessions!inner(
+      session_id,
+      session:sessions(
         id,
         title,
         status,
-        date_time
+        date_time,
+        location,
+        description,
+        max_participants,
+        duration,
+        organizer_id,
+        qr_code_data,
+        created_at,
+        updated_at,
+        current_participants,
+        mvp_user_id
       )
     `)
     .eq('user_id', userId)
@@ -187,13 +198,32 @@ export async function getPendingRatingsForUser(userId: string): Promise<Array<{s
   const pendingRatings = []
   
   for (const userSession of userSessions) {
-    const sessionId = (userSession.session as any).id
+    const session = userSession.session as unknown as Session
+    if (!session) continue
+    
+    const sessionId = session.id
     
     // Get all participants in this session (excluding current user)
     const { data: participants } = await supabase
       .from('session_participants')
       .select(`
-        user:users(*)
+        user_id,
+        user:users(
+          id,
+          username,
+          email,
+          display_name,
+          profile_image_url,
+          location,
+          bio,
+          current_overall_rating,
+          total_sessions_played,
+          total_ratings_received,
+          total_ratings_given,
+          play_type_distribution,
+          created_at,
+          updated_at
+        )
       `)
       .eq('session_id', sessionId)
       .neq('user_id', userId)
@@ -208,12 +238,14 @@ export async function getPendingRatingsForUser(userId: string): Promise<Array<{s
       .eq('rater_id', userId)
     
     const ratedUserIds = new Set(existingRatings?.map(r => r.rated_user_id) || [])
-    const unratedParticipants = participants.filter(p => !ratedUserIds.has((p.user as any).id))
+    const unratedParticipants = participants
+      .filter(p => p.user && !ratedUserIds.has((p.user as unknown as User).id))
+      .map(p => p.user as unknown as User)
     
     if (unratedParticipants.length > 0) {
       pendingRatings.push({
-        session: userSession.session,
-        participants: unratedParticipants.map(p => p.user)
+        session,
+        participants: unratedParticipants
       })
     }
   }

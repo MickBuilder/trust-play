@@ -1,6 +1,5 @@
 import { redirect } from 'next/navigation'
-import { getSessionByQRCode } from '@/lib/database/sessions'
-import { joinSession } from '@/lib/actions/sessions'
+import { getSessionWithDetailsByQRCode } from '@/lib/database/sessions'
 import { createClient } from '@/lib/supabase/server'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
@@ -10,15 +9,11 @@ import {
   Clock, 
   MapPin, 
   Users, 
-  Trophy,
-  UserPlus,
-  AlertCircle,
-  CheckCircle
+  AlertCircle
 } from 'lucide-react'
 import { format, isPast, isFuture, addMinutes } from 'date-fns'
 import Link from 'next/link'
 import { JoinSessionForm } from '@/components/sessions/JoinSessionForm'
-import { SessionWithParticipants } from '@/lib/types/database'
 
 interface JoinSessionPageProps {
   params: Promise<{ code: string }>
@@ -37,7 +32,7 @@ export default async function JoinSessionPage({ params }: JoinSessionPageProps) 
   }
 
   // Get session by code with participants and organizer
-  const session = await getSessionByQRCode(code)
+  const session = await getSessionWithDetailsByQRCode(code)
   
   if (!session) {
     return (
@@ -54,7 +49,7 @@ export default async function JoinSessionPage({ params }: JoinSessionPageProps) 
           </CardHeader>
           <CardContent className="text-center space-y-4 px-4 sm:px-6 pb-6">
             <p className="text-gray-400 text-sm sm:text-base">
-              The session code "{code}" is not valid or the session may have been cancelled.
+              The session code &quot;{code}&quot; is not valid or the session may have been cancelled.
             </p>
             <div className="space-y-3 sm:space-y-2">
               <Button asChild className="w-full h-11 sm:h-10 text-sm sm:text-base">
@@ -77,7 +72,7 @@ export default async function JoinSessionPage({ params }: JoinSessionPageProps) 
   const isSessionFull = session.current_participants >= session.max_participants
   
   // Check if user is already a participant
-  const isParticipant = session.participants?.some((p) => p.user.id === user.id) || false
+  const isParticipant = session.participants?.some((p) => p.id === user.id) || false
   const isOrganizer = user.id === session.organizer_id
 
   // Get user profile for proper typing
@@ -88,13 +83,13 @@ export default async function JoinSessionPage({ params }: JoinSessionPageProps) 
     .single()
 
   const getSessionStatus = () => {
-    if (session.status === 'cancelled') return { label: 'Cancelled', color: 'destructive' }
-    if (session.status === 'completed') return { label: 'Completed', color: 'secondary' }
-    if (isSessionPast) return { label: 'Ended', color: 'secondary' }
-    if (isSessionActive) return { label: 'Active', color: 'default' }
-    if (isSessionFull) return { label: 'Full', color: 'secondary' }
-    if (isFuture(sessionDate)) return { label: 'Upcoming', color: 'default' }
-    return { label: 'Open', color: 'default' }
+    if (session.status === 'cancelled') return { label: 'Cancelled', color: 'destructive' as const }
+    if (session.status === 'completed') return { label: 'Completed', color: 'secondary' as const }
+    if (isSessionPast) return { label: 'Ended', color: 'secondary' as const }
+    if (isSessionActive) return { label: 'Active', color: 'default' as const }
+    if (isSessionFull) return { label: 'Full', color: 'secondary' as const }
+    if (isFuture(sessionDate)) return { label: 'Upcoming', color: 'default' as const }
+    return { label: 'Open', color: 'default' as const }
   }
 
   const sessionStatus = getSessionStatus()
@@ -111,7 +106,7 @@ export default async function JoinSessionPage({ params }: JoinSessionPageProps) 
           {/* Header - Mobile Optimized */}
           <div className="text-center space-y-2 px-2 sm:px-0">
             <h1 className="text-2xl sm:text-3xl font-bold text-white">Join Session</h1>
-            <p className="text-gray-400 text-sm sm:text-base">You've been invited to join this football session</p>
+            <p className="text-gray-400 text-sm sm:text-base">You&apos;ve been invited to join this football session</p>
           </div>
 
           {/* Session Details Card - Mobile Optimized */}
@@ -185,7 +180,6 @@ export default async function JoinSessionPage({ params }: JoinSessionPageProps) 
               {userProfile && (
                 <JoinSessionForm 
                   session={session}
-                  user={userProfile}
                   isParticipant={isParticipant}
                   isOrganizer={isOrganizer}
                   isSessionFull={isSessionFull}

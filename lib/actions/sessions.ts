@@ -1,9 +1,8 @@
 'use server'
 
 import { revalidatePath } from 'next/cache'
-import { redirect } from 'next/navigation'
 import { createClient } from '@/lib/supabase/server'
-import { Session, SessionInsert, SessionParticipantInsert, SessionWithDetails, SessionWithParticipants, User } from '@/lib/types/database'
+import { SessionInsert, SessionParticipantInsert, SessionWithDetails, SessionWithParticipants } from '@/lib/types/database'
 
 // Helper function to generate session QR code data
 function generateSessionCode(): string {

@@ -3,8 +3,7 @@ import { redirect } from 'next/navigation'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
-import { Trophy, Users, Star, Zap, Calendar, Plus, Settings, Edit } from 'lucide-react'
+import { Trophy, Users, Star, Zap, Calendar } from 'lucide-react'
 import Link from 'next/link'
 
 export default async function DashboardPage() {
@@ -16,10 +15,9 @@ export default async function DashboardPage() {
     redirect('/login')
   }
 
-  // Get user display name and avatar
+  // Get user display name
   const displayName = user.user_metadata?.full_name || user.user_metadata?.name || 'Player'
   const firstName = displayName.split(' ')[0]
-  const avatarUrl = user.user_metadata?.avatar_url
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-black via-gray-900 to-black relative overflow-hidden">
@@ -65,7 +63,7 @@ export default async function DashboardPage() {
                 Welcome back, {firstName}! 👋
               </h2>
               <p className="text-gray-400 text-sm sm:text-base">
-                Ready to play some football? Here's your current status.
+                Ready to play some football? Here&apos;s your current status.
               </p>
             </div>
           </div>
@@ -137,7 +135,7 @@ export default async function DashboardPage() {
                   <span className="text-sm text-gray-500 whitespace-nowrap ml-2">1 week ago</span>
                 </div>
                 <div className="flex justify-between items-center p-3 bg-gray-900/30 border border-gray-800/30 rounded-lg">
-                  <span className="text-base text-gray-300">Created session "Sunday Kickoff"</span>
+                  <span className="text-base text-gray-300">Created session &quot;Sunday Kickoff&quot;</span>
                   <span className="text-sm text-gray-500 whitespace-nowrap ml-2">2 weeks ago</span>
                 </div>
               </div>

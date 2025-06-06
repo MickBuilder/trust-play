@@ -44,7 +44,6 @@ export async function middleware(request: NextRequest) {
     '/onboarding',
     '/sessions', 
     '/ratings',
-    '/realtime-demo'
   ]
   
   const isPrivateRoute = privateRoutes.some(route => 

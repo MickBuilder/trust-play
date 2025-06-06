@@ -9,7 +9,6 @@ import {
   QrCode,
   Trophy,
   Calendar,
-  User,
   Search,
   MoreHorizontal
 } from 'lucide-react'

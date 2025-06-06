@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { SessionWithDetails } from '@/lib/types/database'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
@@ -21,7 +21,7 @@ import {
   ArrowRight,
   Loader
 } from 'lucide-react'
-import { format, formatDistanceToNow, isPast, isFuture } from 'date-fns'
+import { format, formatDistanceToNow, isPast } from 'date-fns'
 import { cn } from '@/lib/utils'
 
 interface SessionsListProps {

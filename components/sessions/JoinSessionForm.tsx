@@ -12,11 +12,10 @@ import {
 } from 'lucide-react'
 import { joinSession, leaveSession } from '@/lib/actions/sessions'
 import { toast } from 'sonner'
-import { Session, User } from '@/lib/types/database'
+import { Session } from '@/lib/types/database'
 
 interface JoinSessionFormProps {
   session: Session
-  user: User
   isParticipant: boolean
   isOrganizer: boolean
   isSessionFull: boolean
@@ -25,7 +24,6 @@ interface JoinSessionFormProps {
 
 export function JoinSessionForm({
   session,
-  user,
   isParticipant,
   isOrganizer,
   isSessionFull,
@@ -159,7 +157,7 @@ export function JoinSessionForm({
         <Alert className="border-yellow-600/50 bg-yellow-600/10">
           <AlertCircle className="h-4 w-4 text-yellow-400" />
           <AlertDescription className="text-yellow-400">
-            This session is full. You'll be added to a waiting list.
+            This session is full. You&apos;ll be added to a waiting list.
           </AlertDescription>
         </Alert>
       )}
@@ -183,7 +181,7 @@ export function JoinSessionForm({
       </Button>
       
       <p className="text-xs text-gray-500 text-center">
-        You'll be redirected to the session page after joining
+        You&apos;ll be redirected to the session page after joining
       </p>
     </div>
   )
